@@ -6,3 +6,6 @@ pub use persistent::*;
 
 mod double;
 pub use double::*;
+
+pub mod queue;
+pub use queue::*;
