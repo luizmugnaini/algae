@@ -9,3 +9,4 @@ license = "MIT"
 [dependencies]
 itertools = "0.10.3"
 num = "0.4.1"
+rand = "0.8.5"
