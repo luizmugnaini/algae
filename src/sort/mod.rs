@@ -10,7 +10,7 @@ pub use heap::*;
 use rand::{distributions::Uniform, Rng};
 use std::cmp::PartialOrd;
 
-trait Sorter {
+pub trait Sorter {
     fn sort<T: PartialOrd + Copy>(xs: &mut [T]);
 }
 
@@ -29,6 +29,14 @@ pub fn rand_vec(vec_size: usize) -> Vec<i64> {
     let mut rng = rand::thread_rng();
     let range = Uniform::new(-1000, 1000);
     (0..vec_size).map(|_| rng.sample(&range)).collect()
+}
+
+pub fn check_sorter<T: Sorter>(_: T) {
+    for _ in 0..50 {
+        let mut xs = rand_vec(100);
+        T::sort(&mut xs);
+        assert!(is_sorted(&xs));
+    }
 }
 
 #[cfg(test)]

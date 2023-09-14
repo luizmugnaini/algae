@@ -249,7 +249,7 @@ mod test {
 
     #[test]
     fn build_heap_from_vec() {
-        let mut heap = MaxHeap::from_vec(vec![9, 3, 1, 2, 4, 16, 10, 7, 8, 14]);
+        let heap = MaxHeap::from_vec(vec![9, 3, 1, 2, 4, 16, 10, 7, 8, 14]);
         assert_eq!(heap.into_vec(), vec![16, 14, 10, 8, 4, 1, 9, 7, 2, 3]);
     }
 

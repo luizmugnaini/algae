@@ -1,5 +1,6 @@
 use crate::ds::MaxHeap;
 
+// TODO: implement the `Sorter` trait for `HeapSort`.
 pub struct HeapSort;
 
 impl HeapSort {
@@ -15,6 +16,8 @@ mod test {
 
     #[test]
     fn heapsort() {
-        assert!(sort::is_sorted(&HeapSort::sort(sort::rand_vec(100))));
+        for _ in 0..50 {
+            assert!(sort::is_sorted(&HeapSort::sort(sort::rand_vec(100))));
+        }
     }
 }

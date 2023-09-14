@@ -60,10 +60,8 @@ mod test {
     use crate::sort;
 
     #[test]
-    fn sort() {
-        let mut xs = sort::rand_vec(100);
-        MergeSort::sort(&mut xs);
-        assert!(sort::is_sorted(&xs));
+    fn sorting() {
+        sort::check_sorter(MergeSort);
     }
 
     #[test]

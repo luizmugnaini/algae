@@ -17,13 +17,11 @@ impl Sorter for InsertionSort {
 
 #[cfg(test)]
 mod test {
-    use super::*;
+    use super::InsertionSort;
     use crate::sort;
 
     #[test]
-    fn insertion() {
-        let mut xs = sort::rand_vec(100);
-        InsertionSort::sort(&mut xs);
-        assert!(sort::is_sorted(&xs));
+    fn sorting() {
+        sort::check_sorter(InsertionSort);
     }
 }
