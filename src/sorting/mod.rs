@@ -1,6 +1,9 @@
 mod insertion;
 pub use insertion::*;
 
+mod merge;
+pub use merge::*;
+
 use std::cmp::PartialOrd;
 
 trait Sorter {
