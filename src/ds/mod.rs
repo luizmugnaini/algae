@@ -9,3 +9,6 @@ pub use double::*;
 
 pub mod queue;
 pub use queue::*;
+
+mod heap;
+pub use heap::*;

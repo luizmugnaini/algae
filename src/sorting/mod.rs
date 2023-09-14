@@ -4,6 +4,10 @@ pub use insertion::*;
 mod merge;
 pub use merge::*;
 
+mod heap;
+pub use heap::*;
+
+use rand::{distributions::Uniform, Rng};
 use std::cmp::PartialOrd;
 
 trait Sorter {
@@ -19,6 +23,12 @@ pub fn is_sorted(xs: &[impl PartialOrd]) -> bool {
         last = next;
     }
     true
+}
+
+pub fn rand_vec(vec_size: usize) -> Vec<i64> {
+    let mut rng = rand::thread_rng();
+    let range = Uniform::new(-1000, 1000);
+    (0..vec_size).map(|_| rng.sample(&range)).collect()
 }
 
 #[cfg(test)]
