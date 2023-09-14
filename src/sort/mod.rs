@@ -7,6 +7,9 @@ pub use merge::*;
 mod heap;
 pub use heap::*;
 
+mod quick;
+pub use quick::*;
+
 use rand::{distributions::Uniform, Rng};
 use std::cmp::PartialOrd;
 
