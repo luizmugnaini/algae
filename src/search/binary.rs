@@ -1,3 +1,5 @@
+// TODO: Wrap binary search into a `BinarySearch` struct and implement the `Searcher` trait.
+
 /// Binary searches for the `search`. Assumes `xs` is sorted. If the element is
 /// found at `xs[idx]`, returns `Some(idx)`, otherwise, returns `None`.
 pub fn binary_search<T: PartialOrd>(xs: &[T], search: &T) -> Option<usize> {

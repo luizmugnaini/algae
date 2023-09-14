@@ -18,12 +18,12 @@ impl Sorter for InsertionSort {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::sorting;
+    use crate::sort;
 
     #[test]
     fn insertion() {
-        let mut xs = vec![123, 91847, 1, 0, -1, -450, 800, 555];
+        let mut xs = sort::rand_vec(100);
         InsertionSort::sort(&mut xs);
-        assert!(sorting::is_sorted(&xs));
+        assert!(sort::is_sorted(&xs));
     }
 }

@@ -57,13 +57,13 @@ fn merge<T: PartialOrd + Copy>(xs: &mut [T], low: usize, mid: usize, top: usize)
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::sorting;
+    use crate::sort;
 
     #[test]
     fn sort() {
-        let mut xs = vec![123, 91847, 1, 0, -1, -450, 800, 555];
+        let mut xs = sort::rand_vec(100);
         MergeSort::sort(&mut xs);
-        assert!(sorting::is_sorted(&xs));
+        assert!(sort::is_sorted(&xs));
     }
 
     #[test]

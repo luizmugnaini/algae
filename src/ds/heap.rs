@@ -245,8 +245,7 @@ impl<T: PartialOrd + Clone> MaxHeap<T> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use crate::sorting;
-    use std::collections::BinaryHeap;
+    use crate::sort;
 
     #[test]
     fn build_heap_from_vec() {
@@ -257,14 +256,16 @@ mod test {
     #[test]
     fn build_heap_via_push() {
         let mut heap = MaxHeap::new();
-        vec![9, 3, 1, 2, 4, 16, 10, 7, 8, 14].iter().for_each(|&x| heap.push(x));
+        vec![9, 3, 1, 2, 4, 16, 10, 7, 8, 14]
+            .iter()
+            .for_each(|&x| heap.push(x));
         assert_eq!(heap.into_vec(), vec![16, 14, 10, 7, 8, 1, 9, 2, 4, 3]);
     }
 
     #[test]
     fn heapsort() {
-        let v = sorting::rand_vec(1000);
+        let v = sort::rand_vec(1000);
         let v_heapsort = MaxHeap::heapsort(v);
-        assert!(sorting::is_sorted(&v_heapsort));
+        assert!(sort::is_sorted(&v_heapsort));
     }
 }

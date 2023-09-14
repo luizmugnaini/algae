@@ -1,3 +1,4 @@
 pub mod ds;
 pub mod math;
-pub mod sorting;
+pub mod search;
+pub mod sort;
