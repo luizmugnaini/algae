@@ -73,13 +73,85 @@ impl QuickSort {
     }
 }
 
+/// The `Quick3WaySort` implements the quicksort algorithm via Dijkstra's
+/// approach. The method is based on a single left-to-right pass through the
+/// array. The goal is to divide the array into three parts. Let `v` be an array
+/// and `i` be a pivot index of `v`:
+/// * We construct to the left of `i` the subarray of elements that are strictly
+///   less than `v[i]`.
+/// * To the right of `i` we construct the subarray of elements equal to `v[i]`.
+/// * To the right of the latter subarray we construct a subarray composed of
+///   all elements strictly greater than `v[i]`.
+///
+/// For performance concens, we also apply the cutoff method: that is, for small
+/// enough subarrays, we abandon the quicksort algorithm and run insertion sort.
+/// This increases performance due to the fact that subarrays would populate the
+/// call stack unnecessarily due to the fact that quicksort is a recursive
+/// algorithm.
+///
+/// Example:
+/// ```
+/// use algorithmia::sort::{Quick3WaySort, Sorter};
+///
+/// let mut v = "quicksortexample".as_bytes().to_vec();
+/// Quick3WaySort::sort(&mut v);
+/// assert_eq!("aceeiklmopqrstux", &String::from_utf8(v).unwrap());
+/// ```
+pub struct Quick3WaySort;
+
+impl Sorter for Quick3WaySort {
+    fn sort<T: PartialOrd + Copy>(xs: &mut [T]) {
+        let mut rng = rand::thread_rng();
+        xs.shuffle(&mut rng);
+        Self::_sort(xs, 0, xs.len().checked_sub(1).unwrap_or(0));
+    }
+}
+
+impl Quick3WaySort {
+    fn _sort<T: PartialOrd + Copy>(xs: &mut [T], low: usize, high: usize) {
+        if high <= low + CUTOFF {
+            InsertionSort::sort(xs);
+            return;
+        }
+
+        let mut lt = low;
+        let mut gt = high;
+        let mut scan = low + 1;
+
+        while scan <= gt {
+            match xs[scan]
+                .partial_cmp(&xs[low])
+                .expect("Unable to compare values")
+            {
+                Ordering::Less => {
+                    xs.swap(lt, scan);
+                    lt += 1;
+                    scan += 1;
+                }
+                Ordering::Greater => {
+                    xs.swap(scan, gt);
+                    gt = gt.checked_sub(1).unwrap_or(0);
+                }
+                Ordering::Equal => scan += 1,
+            }
+        }
+        Self::_sort(xs, low, lt.checked_sub(1).unwrap_or(0));
+        Self::_sort(xs, gt + 1, high);
+    }
+}
+
 #[cfg(test)]
 mod test {
-    use super::QuickSort;
+    use super::{Quick3WaySort, QuickSort};
     use crate::sort;
 
     #[test]
-    fn sorting() {
+    fn sorting_quicksort() {
         sort::check_sorter(QuickSort);
+    }
+
+    #[test]
+    fn sorting_quick3waysort() {
+        sort::check_sorter(Quick3WaySort);
     }
 }
