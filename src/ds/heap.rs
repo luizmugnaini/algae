@@ -120,21 +120,16 @@ impl<T: PartialOrd + Clone> Heap<T> for MaxHeap<T> {
     fn node_height(&self, node_idx: usize) -> Option<usize> {
         // Verifies if the index pertains to a valid element of the heap.
         if node_idx > self.size {
-            return None;
+            None
         } else {
             // Goes down left until reaching an invalid heap node.
-            let mut i = node_idx.clone();
+            let mut i = node_idx;
             let mut height = 0;
-            loop {
-                match self.left(i) {
-                    Some(left) => {
-                        height += 1;
-                        i = left;
-                    }
-                    None => break,
-                }
+            while let Some(left) = self.left(i) {
+                height += 1;
+                i = left;
             }
-            return Some(height);
+            Some(height)
         }
     }
 
@@ -185,7 +180,7 @@ impl<T: PartialOrd + Clone> Heap<T> for MaxHeap<T> {
         for current_idx in (0..(self.size / 2)).rev() {
             self.heapify_top(current_idx);
         }
-        return self;
+        self
     }
 
     #[inline]
@@ -238,6 +233,12 @@ impl<T: PartialOrd + Clone> MaxHeap<T> {
             h.heapify_top(0);
         }
         h.data
+    }
+}
+
+impl<T: PartialOrd + Clone> Default for MaxHeap<T> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

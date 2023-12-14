@@ -1,5 +1,7 @@
-use std::cell::{Ref, RefCell};
-use std::rc::Rc;
+use std::{
+    cell::{Ref, RefCell},
+    rc::Rc,
+};
 
 // Each node should have exactly two pointers to it. Each node in the middle of
 // the list is pointed at by its predecessor and successor, while the nodes on
@@ -174,9 +176,10 @@ mod test {
         let mut list = DoubleLinked::new();
 
         // We cant test the Option<Ref<'_, T>> for equality directly
-        let check_empty = |node: Option<Ref<'_, i32>>| match node {
-            Some(_) => assert!(false),
-            None => assert!(true),
+        let check_empty = |node: Option<Ref<'_, i32>>| {
+            if node.is_some() {
+                panic!("Node should be None.");
+            }
         };
         check_empty(list.peek_front());
 

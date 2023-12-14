@@ -39,7 +39,7 @@ impl<T> Queue<T> {
             } else {
                 // We create a box in order to correctly deallocate `last_head`
                 let last_head = Box::from_raw(self.head);
-                self.head = (*last_head).next;
+                self.head = last_head.next;
 
                 // The head was the only node
                 if self.head.is_null() {
