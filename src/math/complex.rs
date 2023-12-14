@@ -37,7 +37,7 @@ impl<T: Clone + Num> Complex<T> {
     /// number with zero imaginary part.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let vec_re = vec![0.1, 4.0, -6.0];
     /// let vec_cpx = Complex::from_real_vec(vec_re);
@@ -111,7 +111,7 @@ impl<T: Clone + Num + Neg<Output = T>> Complex<T> {
     /// Complex conjugate of a given complex number.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z = Complex::new(4, 5);
     /// assert_eq!(z.conj(), Complex::new(4, -5));
@@ -133,7 +133,7 @@ impl<T: Clone + Num> Add for Complex<T> {
     /// Addition of complex numbers.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z1 = Complex::new(3.3, 20.0);
     /// let z2 = Complex::new(4.4, -5.0);
@@ -150,7 +150,7 @@ impl<T: Clone + Num> Add<T> for Complex<T> {
     /// Addition of a complex number and real number.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z = Complex::new(3.3, 20.0);
     /// assert_eq!(z + 5.0, Complex::new(8.3, 20.0));
@@ -178,7 +178,7 @@ impl<T: Copy + Num + Sub<T, Output = T>> Sub for Complex<T> {
     /// Subtraction between complex numbers.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z1 = Complex::new(3, 4);
     /// let z2 = Complex::new(7, 5);
@@ -195,7 +195,7 @@ impl<T: Copy + Num + Sub<T, Output = T>> Sub<T> for Complex<T> {
     /// Subtraction of complex numbers by real numbers.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z = Complex::new(3.0, 4.3);
     /// assert_eq!(z - 2.5, Complex::new(0.5, 4.3));
@@ -219,7 +219,7 @@ impl<T: Copy + Num + Sub<T, Output = T>> Mul for Complex<T> {
     /// Multiplication of complex numbers.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z1 = Complex::new(3, 5);
     /// let z2 = Complex::new(6, 2);
@@ -242,7 +242,7 @@ impl<T: Copy + Num> Mul<T> for Complex<T> {
     /// Multiplication of a complex number by a real number.
     /// Example:
     /// ```
-    /// use algorithmia::math::Complex;
+    /// use algae::math::Complex;
     ///
     /// let z = Complex::new(6, -2);
     /// assert_eq!(z * -4, Complex::new(-24, 8));

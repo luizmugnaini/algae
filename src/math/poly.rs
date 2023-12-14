@@ -81,7 +81,7 @@ impl<T: Num + Copy> Polynomial<T> {
     ///
     /// Example:
     /// ```
-    /// use algorithmia::math::Polynomial;
+    /// use algae::math::Polynomial;
     ///
     /// let mut p = Polynomial::new(vec![1, 0, 2, 4, 0, 0]);
     /// p.reduce();
@@ -121,7 +121,7 @@ impl<T: Num + Copy> Polynomial<T> {
     ///
     /// Example:
     /// ```
-    /// use algorithmia::math::Polynomial;
+    /// use algae::math::Polynomial;
     ///
     /// let mut p = Polynomial::new(vec![5, 2, 0, 1]);
     /// assert_eq!(p.degree_bound(), 3);
