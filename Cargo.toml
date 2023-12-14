@@ -4,9 +4,7 @@ version = "0.1.0"
 edition = "2021"
 license = "MIT"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+fastrand = "2.0.1"
 itertools = "0.10.3"
 num = "0.4.1"
-rand = "0.8.5"

@@ -1,19 +1,14 @@
-use super::Sorter;
-
-pub struct MergeSort;
-
-impl Sorter for MergeSort {
-    fn sort<T: PartialOrd + Copy>(xs: &mut [T]) {
-        merge_sort(xs, 0, xs.len() - 1)
-    }
+/// Merge sort algorithm.
+pub fn merge_sort<T: PartialOrd + Copy>(xs: &mut [T]) {
+    merge_sort_rec(xs, 0, xs.len() - 1);
 }
 
-/// Recursively sort: divide-and-conquer
-fn merge_sort<T: PartialOrd + Copy>(xs: &mut [T], low: usize, top: usize) {
+/// Recursive counterpart of merge-sort.
+fn merge_sort_rec<T: PartialOrd + Copy>(xs: &mut [T], low: usize, top: usize) {
     if low < top {
         let mid = (low + top) / 2;
-        merge_sort(xs, low, mid);
-        merge_sort(xs, mid + 1, top);
+        merge_sort_rec(xs, low, mid);
+        merge_sort_rec(xs, mid + 1, top);
         merge(xs, low, mid, top);
     }
 }
@@ -47,7 +42,7 @@ fn merge<T: PartialOrd + Copy>(xs: &mut [T], low: usize, mid: usize, top: usize)
             *x = left[i];
             (i + 1, j)
         } else {
-            // Dump the remander of the right array
+            // Dump the remainder of the right array
             *x = right[j];
             (i, j + 1)
         }
@@ -56,12 +51,11 @@ fn merge<T: PartialOrd + Copy>(xs: &mut [T], low: usize, mid: usize, top: usize)
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use crate::sort;
 
     #[test]
     fn sorting() {
-        sort::check_sorter(MergeSort);
+        sort::check_sort_fn(super::merge_sort);
     }
 
     #[test]

@@ -10,12 +10,8 @@ pub use heap::*;
 mod quick;
 pub use quick::*;
 
-use rand::{distributions::Uniform, Rng};
-use std::cmp::PartialOrd;
-
-pub trait Sorter {
-    fn sort<T: PartialOrd + Copy>(xs: &mut [T]);
-}
+use fastrand;
+use std::{cmp::PartialOrd, iter};
 
 pub fn is_sorted(xs: &[impl PartialOrd]) -> bool {
     let mut last = &xs[0];
@@ -29,15 +25,15 @@ pub fn is_sorted(xs: &[impl PartialOrd]) -> bool {
 }
 
 pub fn rand_vec(vec_size: usize) -> Vec<i64> {
-    let mut rng = rand::thread_rng();
-    let range = Uniform::new(-1000, 1000);
-    (0..vec_size).map(|_| rng.sample(&range)).collect()
+    iter::repeat_with(|| fastrand::i64(..))
+        .take(vec_size)
+        .collect()
 }
 
-pub fn check_sorter<T: Sorter>(_: T) {
+pub fn check_sort_fn<F: Fn(&mut [i64])>(sort_fn: F) {
     for _ in 0..50 {
         let mut xs = rand_vec(100);
-        T::sort(&mut xs);
+        sort_fn(&mut xs);
         assert!(is_sorted(&xs));
     }
 }
