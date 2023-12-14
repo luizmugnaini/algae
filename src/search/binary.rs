@@ -1,4 +1,5 @@
-// TODO: Wrap binary search into a `BinarySearch` struct and implement the `Searcher` trait.
+// TODO: Wrap binary search into a `BinarySearch` struct and implement the
+// `Searcher` trait.
 
 /// Binary searches for the `search`. Assumes `xs` is sorted. If the element is
 /// found at `xs[idx]`, returns `Some(idx)`, otherwise, returns `None`.
@@ -7,8 +8,8 @@ pub fn binary_search<T: PartialOrd>(xs: &[T], search: &T) -> Option<usize> {
 }
 
 fn _binary_search<T: PartialOrd>(xs: &[T], low: usize, top: usize, search: &T) -> Option<usize> {
+    // If this is the last search, the element was not found.
     if top < low {
-        // Check if this is be the last search, if so, the element was not found
         return None;
     }
 
@@ -16,15 +17,13 @@ fn _binary_search<T: PartialOrd>(xs: &[T], low: usize, top: usize, search: &T) -
     let x = &xs[mid];
 
     if x == search {
-        // Element found
-        Some(mid)
+        return Some(mid);
     } else if x < search {
-        // Search the right slice
-        _binary_search(xs, mid + 1, top, search)
-    } else {
-        // Search the left slice
-        _binary_search(xs, low, mid - 1, search)
+        // Search the right slice.
+        return _binary_search(xs, mid + 1, top, search);
     }
+    // Search the left slice.
+    _binary_search(xs, low, mid - 1, search)
 }
 
 // TODO: implement the two sum algorithm
