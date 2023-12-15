@@ -6,7 +6,6 @@ pub fn heap_sort<T: PartialOrd + Copy>(xs: Vec<T>) -> Vec<T> {
 
 #[cfg(test)]
 mod test {
-    use super::*;
     use crate::sort;
 
     #[test]
