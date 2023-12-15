@@ -1,19 +1,30 @@
-use std::sync::Arc;
+use std::rc::Rc;
 
-pub struct Persistent<T> {
+struct Node<T> {
+    key: T,
+    next: List<T>,
+}
+
+type List<T> = Option<Rc<Node<T>>>;
+
+impl<T> Node<T> {
+    fn new(key: T, next: List<T>) -> Self {
+        Self { key, next }
+    }
+}
+
+pub struct PersistentLinkedList<T> {
     head: List<T>,
 }
 
-type List<T> = Option<Arc<PersistentNode<T>>>;
-
-impl<T> Persistent<T> {
+impl<T> PersistentLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
 
     pub fn prepend(&self, key: T) -> Self {
         Self {
-            head: Some(Arc::new(PersistentNode::new(key, self.head.clone()))),
+            head: Some(Rc::new(Node::new(key, self.head.clone()))),
         }
     }
 
@@ -27,24 +38,24 @@ impl<T> Persistent<T> {
         self.head.as_ref().map(|node| &node.key)
     }
 
-    pub fn iter(&self) -> PersistentIter<T> {
-        PersistentIter {
+    pub fn iter(&self) -> PersistentLinkedListIter<T> {
+        PersistentLinkedListIter {
             next: self.head.as_deref(),
         }
     }
 }
 
-impl<T> Default for Persistent<T> {
+impl<T> Default for PersistentLinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-pub struct PersistentIter<'a, T> {
-    next: Option<&'a PersistentNode<T>>,
+pub struct PersistentLinkedListIter<'a, T> {
+    next: Option<&'a Node<T>>,
 }
 
-impl<'a, T> Iterator for PersistentIter<'a, T> {
+impl<'a, T> Iterator for PersistentLinkedListIter<'a, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -55,26 +66,15 @@ impl<'a, T> Iterator for PersistentIter<'a, T> {
     }
 }
 
-impl<T> Drop for Persistent<T> {
+impl<T> Drop for PersistentLinkedList<T> {
     fn drop(&mut self) {
         let mut head = self.head.take();
         while let Some(node) = head {
-            match Arc::try_unwrap(node) {
+            match Rc::try_unwrap(node) {
                 Ok(mut node) => head = node.next.take(),
                 _ => break,
             }
         }
-    }
-}
-
-struct PersistentNode<T> {
-    key: T,
-    next: List<T>,
-}
-
-impl<T> PersistentNode<T> {
-    fn new(key: T, next: List<T>) -> Self {
-        Self { key, next }
     }
 }
 
@@ -84,7 +84,7 @@ mod test {
 
     #[test]
     fn basics() {
-        let list = Persistent::new();
+        let list = PersistentLinkedList::new();
         // Check head and tail in empty case
         assert_eq!(list.head(), None);
         assert_eq!(list.tail().head(), None);
@@ -105,7 +105,7 @@ mod test {
 
     #[test]
     fn iter() {
-        let list = Persistent::new().prepend(0).prepend(1).prepend(2);
+        let list = PersistentLinkedList::new().prepend(0).prepend(1).prepend(2);
 
         let mut iter = list.iter();
         for x in (0..3).rev() {

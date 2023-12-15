@@ -1,17 +1,27 @@
-pub struct SingleLinked<T> {
+struct Node<T> {
+    key: T,
+    next: Option<Box<Node<T>>>,
+}
+
+type List<T> = Option<Box<Node<T>>>;
+
+impl<T> Node<T> {
+    fn new(key: T, next: List<T>) -> Self {
+        Node { key, next }
+    }
+}
+
+pub struct SingleLinkedList<T> {
     head: List<T>,
 }
 
-type List<T> = Option<Box<SingleNode<T>>>;
-
-impl<T> SingleLinked<T> {
+impl<T> SingleLinkedList<T> {
     pub fn new() -> Self {
         Self { head: None }
     }
 
     pub fn push(&mut self, key: T) {
-        let node = Box::new(SingleNode::new(key, self.head.take()));
-
+        let node = Box::new(Node::new(key, self.head.take()));
         self.head = Some(node);
     }
 
@@ -30,32 +40,37 @@ impl<T> SingleLinked<T> {
         self.head.as_mut().map(|node| &mut node.key)
     }
 
-    pub fn into_iter(self) -> SingleIntoIter<T> {
-        SingleIntoIter(self)
-    }
-
-    pub fn iter(&self) -> SingleIter<T> {
-        SingleIter {
+    pub fn iter(&self) -> SingleLinkedListIter<T> {
+        SingleLinkedListIter {
             next: self.head.as_deref(),
         }
     }
 
-    pub fn iter_mut(&mut self) -> SingleIterMut<T> {
-        SingleIterMut {
+    pub fn iter_mut(&mut self) -> SingleLinkedListIterMut<T> {
+        SingleLinkedListIterMut {
             next: self.head.as_deref_mut(),
         }
     }
 }
 
-impl<T> Default for SingleLinked<T> {
+impl<T> Default for SingleLinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-pub struct SingleIntoIter<T>(SingleLinked<T>);
+impl<T> Drop for SingleLinkedList<T> {
+    fn drop(&mut self) {
+        let mut list = self.head.take();
+        while let Some(mut node) = list {
+            list = node.next.take();
+        }
+    }
+}
 
-impl<T> Iterator for SingleIntoIter<T> {
+pub struct SingleLinkedListIntoIter<T>(SingleLinkedList<T>);
+
+impl<T> Iterator for SingleLinkedListIntoIter<T> {
     type Item = T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -63,11 +78,20 @@ impl<T> Iterator for SingleIntoIter<T> {
     }
 }
 
-pub struct SingleIter<'a, T> {
-    next: Option<&'a SingleNode<T>>,
+impl<T> IntoIterator for SingleLinkedList<T> {
+    type Item = T;
+    type IntoIter = SingleLinkedListIntoIter<T>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        SingleLinkedListIntoIter(self)
+    }
 }
 
-impl<'a, T> Iterator for SingleIter<'a, T> {
+pub struct SingleLinkedListIter<'a, T> {
+    next: Option<&'a Node<T>>,
+}
+
+impl<'a, T> Iterator for SingleLinkedListIter<'a, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -78,11 +102,11 @@ impl<'a, T> Iterator for SingleIter<'a, T> {
     }
 }
 
-pub struct SingleIterMut<'a, T> {
-    next: Option<&'a mut SingleNode<T>>,
+pub struct SingleLinkedListIterMut<'a, T> {
+    next: Option<&'a mut Node<T>>,
 }
 
-impl<'a, T> Iterator for SingleIterMut<'a, T> {
+impl<'a, T> Iterator for SingleLinkedListIterMut<'a, T> {
     type Item = &'a mut T;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -93,33 +117,13 @@ impl<'a, T> Iterator for SingleIterMut<'a, T> {
     }
 }
 
-impl<T> Drop for SingleLinked<T> {
-    fn drop(&mut self) {
-        let mut list = self.head.take();
-        while let Some(mut node) = list {
-            list = node.next.take();
-        }
-    }
-}
-
-struct SingleNode<T> {
-    key: T,
-    next: List<T>,
-}
-
-impl<T> SingleNode<T> {
-    fn new(key: T, next: List<T>) -> Self {
-        SingleNode { key, next }
-    }
-}
-
 #[cfg(test)]
 mod test {
     use super::*;
 
     #[test]
     fn push_n_pop() {
-        let mut list = SingleLinked::new();
+        let mut list = SingleLinkedList::new();
 
         // Verify the correctness of pop for the empty case
         assert_eq!(list.pop(), None);
@@ -137,7 +141,7 @@ mod test {
 
     #[test]
     fn peek() {
-        let mut list = SingleLinked::new();
+        let mut list = SingleLinkedList::new();
         assert_eq!(list.peek(), None);
         assert_eq!(list.peek_mut(), None);
 
@@ -153,7 +157,7 @@ mod test {
 
     #[test]
     fn into_iter() {
-        let mut list = SingleLinked::new();
+        let mut list = SingleLinkedList::new();
         for x in 0..3 {
             list.push(x);
         }
@@ -166,7 +170,7 @@ mod test {
 
     #[test]
     fn iter() {
-        let mut list = SingleLinked::new();
+        let mut list = SingleLinkedList::new();
         for x in 0..3 {
             list.push(x);
         }
@@ -179,7 +183,7 @@ mod test {
 
     #[test]
     fn iter_mut() {
-        let mut list = SingleLinked::new();
+        let mut list = SingleLinkedList::new();
         for x in 0..3 {
             list.push(x);
         }
