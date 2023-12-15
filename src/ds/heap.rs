@@ -257,7 +257,7 @@ mod test {
     #[test]
     fn build_heap_via_push() {
         let mut heap = MaxHeap::new();
-        vec![9, 3, 1, 2, 4, 16, 10, 7, 8, 14]
+        [9, 3, 1, 2, 4, 16, 10, 7, 8, 14]
             .iter()
             .for_each(|&x| heap.push(x));
         assert_eq!(heap.into_vec(), vec![16, 14, 10, 7, 8, 1, 9, 2, 4, 3]);
