@@ -1,13 +1,24 @@
 use std::ptr;
 
+struct Node<T> {
+    key: T,
+    next: List<T>,
+}
+
+type List<T> = *mut Node<T>;
+
+impl<T> Node<T> {
+    fn new(key: T, next: List<T>) -> Self {
+        Self { key, next }
+    }
+}
+
 // Push to the end of the queue
 // Pop from the head of the queue
 struct Queue<T> {
     head: List<T>,
-    tail: *mut QueueNode<T>,
+    tail: *mut Node<T>,
 }
-
-type List<T> = *mut QueueNode<T>;
 
 #[allow(dead_code)]
 impl<T> Queue<T> {
@@ -20,7 +31,7 @@ impl<T> Queue<T> {
 
     pub fn push(&mut self, key: T) {
         unsafe {
-            let new_tail = Box::into_raw(Box::new(QueueNode::new(key, ptr::null_mut())));
+            let new_tail = Box::into_raw(Box::new(Node::new(key, ptr::null_mut())));
 
             if self.tail.is_null() {
                 self.head = new_tail;
@@ -91,7 +102,7 @@ impl<T> Iterator for QueueIntoIter<T> {
 }
 
 pub struct QueueIter<'a, T> {
-    next: Option<&'a QueueNode<T>>,
+    next: Option<&'a Node<T>>,
 }
 
 impl<'a, T> Iterator for QueueIter<'a, T> {
@@ -108,7 +119,7 @@ impl<'a, T> Iterator for QueueIter<'a, T> {
 }
 
 pub struct QueueIterMut<'a, T> {
-    next: Option<&'a mut QueueNode<T>>,
+    next: Option<&'a mut Node<T>>,
 }
 
 impl<'a, T> Iterator for QueueIterMut<'a, T> {
@@ -127,17 +138,6 @@ impl<'a, T> Iterator for QueueIterMut<'a, T> {
 impl<T> Drop for Queue<T> {
     fn drop(&mut self) {
         while self.pop().is_some() {}
-    }
-}
-
-struct QueueNode<T> {
-    key: T,
-    next: List<T>,
-}
-
-impl<T> QueueNode<T> {
-    fn new(key: T, next: List<T>) -> Self {
-        Self { key, next }
     }
 }
 
